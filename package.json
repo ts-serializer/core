@@ -1,0 +1,32 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "An serializer library for Typescript And Javascript",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ts-serializer/core.git"
+  },
+  "keywords": [
+    "Typescript",
+    "Serializer",
+    "Annotation",
+    "Decorator",
+    "Javascript"
+  ],
+  "author": "Thomas Nisole",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ts-serializer/core/issues"
+  },
+  "homepage": "https://github.com/ts-serializer/core#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "typescript": "^2.9.2"
+  }
+}

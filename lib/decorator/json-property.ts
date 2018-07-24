@@ -1,13 +1,22 @@
 export function JsonProperty<T>(jsonPropertyContext: JsonPropertyContext<T>|string): any {
-    function _jsonProperty(target: any, propertyKey: string, description: PropertyDescriptor) {
-        if (target.hasOwnProperty(propertyKey)) {
-            return;
+    return (target: any, propertyKey: string) => {
+        let metaData: JsonPropertyContext<T>;
+
+        if (typeof jsonPropertyContext === 'string') {
+            metaData = new JsonPropertyContext<T>();
+            metaData.name = jsonPropertyContext;
+        } else if (jsonPropertyContext instanceof JsonPropertyContext) {
+            metaData = jsonPropertyContext;
+        } else {
+            throw new Error(`JsonPropertyContext is not correctly initialized : target : ${target} | property : ${propertyKey}`);
         }
 
-        target[propertyKey] = void 0;
-    }
+        if (!target.hasOwnProperty(propertyKey)) {
+            target[propertyKey] = void 0;
+        }
 
-    return _jsonProperty;
+        Reflect.defineMetadata('JsonProperty', metaData, target, propertyKey);
+    };
 }
 
 export class JsonPropertyContext<T> {

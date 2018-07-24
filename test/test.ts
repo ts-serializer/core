@@ -1,10 +1,14 @@
-import {Company} from './company';
 import {Deserializer} from '../lib/deserializer/deserializer';
+import {Hero} from './hero';
 
-console.log('start');
-const company: Company = new Company();
+const hero: Hero = new Hero();
+hero.id = 1;
+hero.firstName = 'Thomas';
+hero.lastName = 'Nisole';
+hero.weapons = 'weapons';
+hero.city = 'My city';
 
 const deserializer: Deserializer = new Deserializer();
-console.log(deserializer.deserialize(company));
+const deserializedHero: any = deserializer.deserialize(hero);
 
-console.log('end');
+console.log(deserializedHero);

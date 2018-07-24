@@ -1,3 +1,4 @@
+
 export class Deserializer {
 
     public constructor() {
@@ -5,8 +6,6 @@ export class Deserializer {
     }
 
     public deserialize(object: any): any {
-        console.log(object);
-
-        return {};
+        return void 0;
     }
 }

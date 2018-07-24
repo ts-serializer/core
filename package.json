@@ -30,5 +30,8 @@
     "mocha": "^5.2.0",
     "tsc-watch": "^1.0.26",
     "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.12"
   }
 }

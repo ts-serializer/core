@@ -1,14 +1,17 @@
-export function JsonProperty<T>(jsonPropertyContext: JsonPropertyContext<T>|string): any {
+import 'reflect-metadata';
+import {Converter} from '../converter/converter';
+
+export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R>|string): any {
     return (target: any, propertyKey: string) => {
-        let metaData: JsonPropertyContext<T>;
+        let metaData: JsonPropertyContext<T, R>;
 
         if (typeof jsonPropertyContext === 'string') {
-            metaData = new JsonPropertyContext<T>();
+            metaData = new JsonPropertyContext<T, R>();
             metaData.name = jsonPropertyContext;
-        } else if (jsonPropertyContext instanceof JsonPropertyContext) {
+        } else if (typeof jsonPropertyContext  === 'object') {
             metaData = jsonPropertyContext;
         } else {
-            throw new Error(`JsonPropertyContext is not correctly initialized : target : ${target} | property : ${propertyKey}`);
+            throw new Error('JsonPropertyContext is not correctly initialized, JsonPropertyContext : ' + jsonPropertyContext);
         }
 
         if (!target.hasOwnProperty(propertyKey)) {
@@ -19,12 +22,12 @@ export function JsonProperty<T>(jsonPropertyContext: JsonPropertyContext<T>|stri
     };
 }
 
-export class JsonPropertyContext<T> {
+export class JsonPropertyContext<T, R> {
     public name?: string;
 
     public type?: {new(): T};
 
-    public customConverter?: {new(): T};
+    public customConverter?: {new(): Converter<T, R>};
 
     public excludeToJson?: boolean
 }

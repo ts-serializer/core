@@ -2,7 +2,7 @@ import {JsonProperty} from '../lib/decorator/json-property';
 
 export class User {
 
-    @JsonProperty('id')
+    @JsonProperty('identifier')
     public id: number;
 
     @JsonProperty('lastName')
@@ -10,6 +10,9 @@ export class User {
 
     @JsonProperty('firstName')
     public firstName: string;
+
+    @JsonProperty({excludeToJson: true})
+    public nickName: string;
 
     @JsonProperty('fullname')
     public get fullName(): string {
@@ -19,5 +22,10 @@ export class User {
     @JsonProperty('technicalname')
     public getTechnicalName(): string {
         return this.id + '/' + this.firstName + '/' + this.lastName;
+    }
+
+    @JsonProperty('description')
+    public getDescription(): string {
+        return this.id + ' : ' + this.firstName + ' - ' + this.lastName;
     }
 }

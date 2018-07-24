@@ -4,7 +4,8 @@
   "description": "An serializer library for Typescript And Javascript",
   "main": "index.js",
   "scripts": {
-    "start": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/test/test.js\"",
+    "start:example:serializer": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-serializer.js\"",
+    "start:example:deserializer": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-deserializer.js\"",
     "build": "tsc",
     "test": "mocha --reporter spec"
   },

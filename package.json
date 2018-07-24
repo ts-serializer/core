@@ -4,6 +4,7 @@
   "description": "An serializer library for Typescript And Javascript",
   "main": "index.js",
   "scripts": {
+    "start": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/test/test.js\"",
     "build": "tsc",
     "test": "mocha --reporter spec"
   },
@@ -27,6 +28,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "tsc-watch": "^1.0.26",
     "typescript": "^2.9.2"
   }
 }

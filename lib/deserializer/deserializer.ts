@@ -5,24 +5,28 @@ export class Deserializer {
     public constructor() {
     }
 
-    public deserialize<T>(type: {new(): T}, data: any|any[]): T {
+    public deserialize(type: {new(): any}, data: any|any[]): any {
         if (this.isArray(data)) {
             return data.map((value: any) => this.deserialize(type, value));
         }
 
         let result = new type();
         for (const prop in result) {
-            if (result[prop] instanceof Function) {
-                continue;
-            }
-
             if (!Reflect.hasMetadata('JsonProperty', result, prop)) {
                 continue;
             }
 
             const propertyContext: JsonPropertyContext<any, any> = Reflect.getMetadata('JsonProperty', result, prop);
 
-            result[prop] = data[propertyContext.name];
+            if (result[prop] instanceof Function) {
+               if ((<Function>result[prop]).length !== 1) {
+                   continue;
+               }
+
+               result[prop](data[propertyContext.name]);
+            } else {
+              result[prop] = data[propertyContext.name];
+            }
         }
 
         return result;

@@ -16,6 +16,12 @@ export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R
 
         if (!target.hasOwnProperty(propertyKey)) {
             target[propertyKey] = void 0;
+        } else {
+            const descriptor: any = Object.getOwnPropertyDescriptor(target, propertyKey);
+
+            if (descriptor && (descriptor.set|| descriptor.get)) {
+                throw new Error('JsonProperty annotation doesn\'t support getter/setter');
+            }
         }
 
         Reflect.defineMetadata('JsonProperty', metaData, target, propertyKey);

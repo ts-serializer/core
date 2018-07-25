@@ -15,13 +15,8 @@ export class User {
     public nickName: string;
 
     @JsonProperty('fullname')
-    public get fullName(): string {
+    public getFullName(): string {
         return this.firstName + ' ' + this.lastName;
-    }
-
-    @JsonProperty('technicalname')
-    public getTechnicalName(): string {
-        return this.id + '/' + this.firstName + '/' + this.lastName;
     }
 
     @JsonProperty('description')

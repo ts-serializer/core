@@ -11,7 +11,9 @@ export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R
         } else if (typeof jsonPropertyContext  === 'object') {
             metaData = jsonPropertyContext;
         } else {
-            throw new Error('JsonPropertyContext is not correctly initialized, JsonPropertyContext : ' + jsonPropertyContext);
+            throw new Error(
+                `JsonPropertyContext is not correctly initialized, JsonPropertyContext : ${jsonPropertyContext}`
+            );
         }
 
         if (!target.hasOwnProperty(propertyKey)) {
@@ -19,7 +21,7 @@ export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R
         } else {
             const descriptor: any = Object.getOwnPropertyDescriptor(target, propertyKey);
 
-            if (descriptor && (descriptor.set|| descriptor.get)) {
+            if (descriptor && (descriptor.set || descriptor.get)) {
                 throw new Error('JsonProperty annotation doesn\'t support getter/setter');
             }
         }
@@ -35,5 +37,5 @@ export class JsonPropertyContext<T, R> {
 
     public customConverter?: {new(): Converter<T, R>};
 
-    public excludeToJson?: boolean
+    public excludeToJson?: boolean;
 }

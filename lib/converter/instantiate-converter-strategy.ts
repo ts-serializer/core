@@ -1,5 +1,5 @@
-import {ConverterStrategy} from './converter-strategy';
 import {Converter} from './converter';
+import {ConverterStrategy} from './converter-strategy';
 
 export class InstantiateConverterStrategy implements ConverterStrategy {
 

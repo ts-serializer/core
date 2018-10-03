@@ -8,5 +8,9 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": false
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "example/**/*.ts"
+  ]
 }

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import {JsonPropertyContext} from '../decorator/json-property';
 import {ConverterStrategy} from '../converter/converter-strategy';
+import {JsonPropertyContext} from '../decorator/json-property';
 import {SerializerConfiguration} from './serializer-configuration';
 
 export class Serializer {
@@ -15,8 +15,8 @@ export class Serializer {
             return object.map((value: any) => this.serialize(value));
         }
 
-        let result: any = {};
-        for (let prop in object) {
+        const result: any = {};
+        for (const prop in object) {
             if (!Reflect.hasMetadata('JsonProperty', object, prop)) {
                 continue;
             }
@@ -34,11 +34,13 @@ export class Serializer {
                 propertyValue = object[prop];
             }
 
-            if (!this.serializerConfiguration.serializeNull && (propertyValue === null || propertyValue === undefined)) {
+            if (!this.serializerConfiguration.serializeNull
+                && (propertyValue === null || propertyValue === undefined)) {
                 continue;
             }
 
-            if (this.serializerConfiguration.serializeNull && (propertyValue === null || propertyValue === undefined)) {
+            if (this.serializerConfiguration.serializeNull
+                && (propertyValue === null || propertyValue === undefined)) {
                 result[propertyContext.name] = null;
                 continue;
             }
@@ -48,18 +50,20 @@ export class Serializer {
                     if (propertyContext.customConverter) {
                         return this.converterStrategy.getConverter(propertyContext.customConverter).toJson(value);
                     } else {
-                        return !this.isPrimitive(value) ? this.serialize(value) : value
+                        return !this.isPrimitive(value) ? this.serialize(value) : value;
                     }
                 });
             } else if (!this.isPrimitive(propertyValue)) {
                 if (propertyContext.customConverter) {
-                  propertyValue = this.converterStrategy.getConverter(propertyContext.customConverter).toJson(propertyValue);
+                  propertyValue = this.converterStrategy
+                      .getConverter(propertyContext.customConverter)
+                      .toJson(propertyValue);
                 } else {
                   propertyValue = this.serialize(propertyValue);
                 }
             }
 
-            result[propertyContext.name] = propertyValue
+            result[propertyContext.name] = propertyValue;
         }
 
         return result;

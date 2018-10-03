@@ -1,0 +1,33 @@
+{
+    "linterOptions": {
+        "exclude": [
+            "example/**/*.ts"
+        ]
+    },
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+      "interface-over-type-literal": true,
+      "no-empty": false,
+      "quotemark": [
+        true,
+        "single"
+      ],
+      "interface-name": [true, "never-prefix"],
+      "trailing-comma": [false],
+      "no-angle-bracket-type-assertion": false,
+      "ban-types": {
+        "options": [
+          ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+          ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+          ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+          ["String", "Avoid using the `String` type. Did you mean `string`?"],
+          ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+        ]
+      }
+    },
+    "rulesDirectory": []
+}

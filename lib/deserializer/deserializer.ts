@@ -2,15 +2,14 @@ import {JsonPropertyContext} from '../decorator/json-property';
 
 export class Deserializer {
 
-    public constructor() {
-    }
+    public constructor() {}
 
     public deserialize(type: {new(): any}, data: any|any[]): any {
         if (this.isArray(data)) {
             return data.map((value: any) => this.deserialize(type, value));
         }
 
-        let result = new type();
+        const result = new type();
         for (const prop in result) {
             if (!Reflect.hasMetadata('JsonProperty', result, prop)) {
                 continue;
@@ -19,7 +18,7 @@ export class Deserializer {
             const propertyContext: JsonPropertyContext<any, any> = Reflect.getMetadata('JsonProperty', result, prop);
 
             if (result[prop] instanceof Function) {
-               if ((<Function>result[prop]).length !== 1) {
+               if ((<Function> result[prop]).length !== 1) {
                    continue;
                }
 

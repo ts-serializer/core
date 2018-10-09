@@ -6,10 +6,10 @@ import {DateConverter} from '../lib/converter/date-converter';
 
 export class Hero extends User {
 
-  @JsonProperty({name: 'weapons'})
+  @JsonProperty({name: 'weapons', type: Weapon})
   public weapons: Weapon[];
 
-  @JsonProperty({name: 'animal'})
+  @JsonProperty({name: 'animal', type: Animal})
   public animal: Animal;
 
   @JsonProperty('tags')
@@ -21,14 +21,14 @@ export class Hero extends User {
   @JsonProperty({name: 'fightDates', customConverter: DateConverter})
   public fightDates: Date[];
 
-  private myPrivateProperty: string;
+  private _myPrivateProperty: string;
 
-  @JsonProperty('getWeapons')
+  private _myDatePrivateProperty: Date;
+
   public getWeapons(): string {
     return 'my weapons';
   }
 
-  @JsonProperty('descriptionHero')
   public getDescription(): string {
     return this.id + ' : ' + this.firstName + ' - ' + this.lastName + ' / Animal : ' + this.animal.id + ' - ' + this.animal.name;
   }
@@ -40,13 +40,20 @@ export class Hero extends User {
   public set monSetter(value: string) {
   }
 
-  @JsonProperty('myPrivateProperty')
   public getMyPrivateProperty(): string {
-      return this.myPrivateProperty;
+      return this._myPrivateProperty;
   }
 
-  @JsonProperty('myPrivateProperty')
   public setMyPrivateProperty(value: string): void {
-    this.myPrivateProperty = value;
+    this._myPrivateProperty = value;
+  }
+
+  @JsonProperty({name: 'myDatePrivateProperty', customConverter: DateConverter})
+  public getMyDatePrivateProperty(): Date {
+    return this._myDatePrivateProperty;
+  }
+
+  public setMyDatePrivateProperty(value: Date): void {
+    this._myDatePrivateProperty = value;
   }
 }

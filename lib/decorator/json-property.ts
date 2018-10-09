@@ -38,4 +38,6 @@ export class JsonPropertyContext<T, R> {
     public customConverter?: {new(): Converter<T, R>};
 
     public excludeToJson?: boolean;
+
+    public excludeFromJson?: boolean;
 }

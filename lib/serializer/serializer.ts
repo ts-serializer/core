@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import {ConverterStrategy} from '../converter/converter-strategy';
+import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
 import {SerializerConfiguration} from './serializer-configuration';
 
@@ -7,7 +8,26 @@ export class Serializer {
 
     public constructor(
       private serializerConfiguration: SerializerConfiguration,
-      private converterStrategy: ConverterStrategy) {
+      private converterStrategies: ConverterStrategy[]) {
+        if (!this.serializerConfiguration) {
+            this.serializerConfiguration = new SerializerConfiguration();
+        }
+
+        if (!this.converterStrategies) {
+            this.converterStrategies = [];
+        }
+        this.converterStrategies.push(new InstantiateConverterStrategy());
+
+        this.converterStrategies.sort((csA: ConverterStrategy , csB: ConverterStrategy) => {
+            if (csA.getPriority() < csB.getPriority()) {
+                return -1;
+            }
+            if (csA.getPriority() > csB.getPriority()) {
+                return 1;
+            }
+
+            return 0;
+        });
     }
 
     public serialize(object: any|any[]): any {
@@ -29,10 +49,9 @@ export class Serializer {
 
             let propertyValue;
             if (object[prop] instanceof Function) {
-                propertyValue = object[prop]();
-            } else {
-                propertyValue = object[prop];
+                throw new Error('JsonProperty annotation doesn\'t support function');
             }
+            propertyValue = object[prop];
 
             if (!this.serializerConfiguration.serializeNull
                 && (propertyValue === null || propertyValue === undefined)) {
@@ -48,16 +67,23 @@ export class Serializer {
             if (this.isArray(propertyValue)) {
                 propertyValue = propertyValue.map((value: any) => {
                     if (propertyContext.customConverter) {
-                        return this.converterStrategy.getConverter(propertyContext.customConverter).toJson(value);
+                        const converter: ConverterStrategy = this.converterStrategies.find(
+                            (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
+                        );
+
+                        return converter ? converter.getConverter(propertyContext.customConverter).toJson(value) : null;
                     } else {
                         return !this.isPrimitive(value) ? this.serialize(value) : value;
                     }
                 });
             } else if (!this.isPrimitive(propertyValue)) {
                 if (propertyContext.customConverter) {
-                  propertyValue = this.converterStrategy
-                      .getConverter(propertyContext.customConverter)
-                      .toJson(propertyValue);
+                    const converter: ConverterStrategy = this.converterStrategies.find(
+                        (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
+                    );
+                    propertyValue = converter ? converter
+                        .getConverter(propertyContext.customConverter)
+                        .toJson(propertyValue) : null;
                 } else {
                   propertyValue = this.serialize(propertyValue);
                 }
@@ -70,10 +96,10 @@ export class Serializer {
     }
 
     private isArray(obj: any): boolean {
-      return Object.prototype.toString.call(obj) === '[object Array]';
+        return Object.prototype.toString.call(obj) === '[object Array]';
     }
 
     private isPrimitive(obj: any): boolean {
-      return typeof obj  !== 'object';
+        return typeof obj  !== 'object';
     }
 }

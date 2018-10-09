@@ -4,8 +4,8 @@
   "description": "An serializer library for Typescript And Javascript",
   "main": "index.js",
   "scripts": {
-    "start:example:serializer": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-serializer.js\"",
-    "start:example:deserializer": "tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-deserializer.js\"",
+    "start:example:serializer": "npm run clean && tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-serializer.js\"",
+    "start:example:deserializer": "npm run clean && tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-deserializer.js\"",
     "test": "mocha --reporter spec",
     "clean": "rm -R dist",
     "lint": "tslint -p tsconfig.json",

@@ -14,12 +14,10 @@ export class User {
     @JsonProperty({excludeToJson: true})
     public nickName: string;
 
-    @JsonProperty('fullname')
     public getFullName(): string {
         return this.firstName + ' ' + this.lastName;
     }
 
-    @JsonProperty('description')
     public getDescription(): string {
         return this.id + ' : ' + this.firstName + ' - ' + this.lastName;
     }

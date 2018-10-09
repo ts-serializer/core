@@ -7,6 +7,6 @@ export class DateConverter implements Converter<Date, string> {
   }
 
   public toJson(value: Date): string {
-    return value.getDate().toString();
+    return value.toString();
   }
 }

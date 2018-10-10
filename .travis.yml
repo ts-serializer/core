@@ -8,5 +8,5 @@ before_install:
 - yarn install
 
 script:
-- npm lint
-- npm test
+- npm run lint
+- npm run test

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import {ConverterStrategy} from '../converter/converter-strategy';
 import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
+import {isArray, isPrimitive} from '../util';
 import {SerializerConfiguration} from './serializer-configuration';
 
 export class Serializer {
@@ -31,7 +32,7 @@ export class Serializer {
     }
 
     public serialize(object: any|any[]): any {
-        if (this.isArray(object)) {
+        if (isArray(object)) {
             return object.map((value: any) => this.serialize(value));
         }
 
@@ -53,18 +54,16 @@ export class Serializer {
             }
             propertyValue = object[prop];
 
-            if (!this.serializerConfiguration.serializeNull
-                && (propertyValue === null || propertyValue === undefined)) {
+            if (!this.serializerConfiguration.serializeNull && propertyValue == null) {
                 continue;
             }
 
-            if (this.serializerConfiguration.serializeNull
-                && (propertyValue === null || propertyValue === undefined)) {
+            if (this.serializerConfiguration.serializeNull && propertyValue == null) {
                 result[propertyContext.name] = null;
                 continue;
             }
 
-            if (this.isArray(propertyValue)) {
+            if (isArray(propertyValue)) {
                 propertyValue = propertyValue.map((value: any) => {
                     if (propertyContext.customConverter) {
                         const converter: ConverterStrategy = this.converterStrategies.find(
@@ -73,10 +72,10 @@ export class Serializer {
 
                         return converter ? converter.getConverter(propertyContext.customConverter).toJson(value) : null;
                     } else {
-                        return !this.isPrimitive(value) ? this.serialize(value) : value;
+                        return !isPrimitive(value) ? this.serialize(value) : value;
                     }
                 });
-            } else if (!this.isPrimitive(propertyValue)) {
+            } else if (!isPrimitive(propertyValue)) {
                 if (propertyContext.customConverter) {
                     const converter: ConverterStrategy = this.converterStrategies.find(
                         (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
@@ -93,13 +92,5 @@ export class Serializer {
         }
 
         return result;
-    }
-
-    private isArray(obj: any): boolean {
-        return Object.prototype.toString.call(obj) === '[object Array]';
-    }
-
-    private isPrimitive(obj: any): boolean {
-        return typeof obj  !== 'object';
     }
 }

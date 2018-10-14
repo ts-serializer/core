@@ -11,16 +11,18 @@ export class Deserializer {
         }
         this.converterStrategies.push(new InstantiateConverterStrategy());
 
-        this.converterStrategies.sort((csA: ConverterStrategy , csB: ConverterStrategy) => {
-            if (csA.getPriority() < csB.getPriority()) {
-                return -1;
-            }
-            if (csA.getPriority() > csB.getPriority()) {
-                return 1;
-            }
+        if (this.converterStrategies.length > 1) {
+            this.converterStrategies.sort((csA: ConverterStrategy , csB: ConverterStrategy) => {
+                if (csA.getPriority() < csB.getPriority()) {
+                    return -1;
+                }
+                if (csA.getPriority() > csB.getPriority()) {
+                    return 1;
+                }
 
-            return 0;
-        });
+                return 0;
+            });
+        }
     }
 
     public deserialize(type: {new(): any}, data: any|any[]): any {

@@ -1,6 +1,7 @@
 import {ConverterStrategy} from '../converter/converter-strategy';
 import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
+import {isArray} from '../util';
 
 export class Deserializer {
 
@@ -27,7 +28,11 @@ export class Deserializer {
             throw new Error('For deserialization of complex type, type attribute cannot be null in JsonProperty');
         }
 
-        if (this.isArray(data)) {
+        if (data == null) {
+            return null;
+        }
+
+        if (isArray(data)) {
             return data.map((value: any) => this.deserialize(type, value));
         }
 
@@ -38,7 +43,6 @@ export class Deserializer {
             }
 
             const propertyContext: JsonPropertyContext<any, any> = Reflect.getMetadata('JsonProperty', result, prop);
-
             if (propertyContext.excludeFromJson) {
                 continue;
             }
@@ -49,7 +53,7 @@ export class Deserializer {
 
             result[prop] = data[propertyContext.name];
 
-            if (this.isArray(result[prop])) {
+            if (isArray(result[prop])) {
                 result[prop] = result[prop].map((value: any) => {
                     if (propertyContext.customConverter) {
                         const converter: ConverterStrategy = this.converterStrategies.find(
@@ -57,11 +61,13 @@ export class Deserializer {
                         );
 
                         return converter ? converter.getConverter(propertyContext.customConverter).toJson(value) : null;
+                    } else if (propertyContext.type) {
+                        return this.deserialize(propertyContext.type, value);
                     } else {
-                        return !this.isPrimitive(value) ? this.deserialize(propertyContext.type, value) : value;
+                        return value;
                     }
                 });
-            } else if (!this.isPrimitive(result[prop])) {
+            } else {
                 if (propertyContext.customConverter) {
                     const converter: ConverterStrategy = this.converterStrategies.find(
                         (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
@@ -69,20 +75,12 @@ export class Deserializer {
                     result[prop] = converter ? converter
                         .getConverter(propertyContext.customConverter)
                         .toJson(result[prop]) : null;
-                } else {
+                } else if (propertyContext.type) {
                     result[prop] = this.deserialize(propertyContext.type, result[prop]);
                 }
             }
         }
 
         return result;
-    }
-
-    private isArray(obj: any): boolean {
-        return Object.prototype.toString.call(obj) === '[object Array]';
-    }
-
-    private isPrimitive(obj: any): boolean {
-        return typeof obj  !== 'object';
     }
 }

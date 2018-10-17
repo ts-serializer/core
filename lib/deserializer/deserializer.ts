@@ -62,7 +62,7 @@ export class Deserializer {
                             (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
                         );
 
-                        return converter ? converter.getConverter(propertyContext.customConverter).toJson(value) : null;
+                        return converter ? converter.getConverter(propertyContext.customConverter).fromJson(value) : null;
                     } else if (propertyContext.type) {
                         return this.deserialize(propertyContext.type, value);
                     } else {
@@ -76,7 +76,7 @@ export class Deserializer {
                     );
                     result[prop] = converter ? converter
                         .getConverter(propertyContext.customConverter)
-                        .toJson(result[prop]) : null;
+                        .fromJson(result[prop]) : null;
                 } else if (propertyContext.type) {
                     result[prop] = this.deserialize(propertyContext.type, result[prop]);
                 }

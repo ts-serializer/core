@@ -48,7 +48,6 @@ export class Hero extends User {
     this._myPrivateProperty = value;
   }
 
-  @JsonProperty({name: 'myDatePrivateProperty', customConverter: DateConverter})
   public getMyDatePrivateProperty(): Date {
     return this._myDatePrivateProperty;
   }

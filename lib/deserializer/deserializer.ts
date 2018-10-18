@@ -53,6 +53,10 @@ export class Deserializer {
                 throw new Error('JsonProperty annotation doesn\'t support function');
             }
 
+            if (!data[propertyContext.name]) {
+                continue;
+            }
+
             result[prop] = data[propertyContext.name];
 
             if (isArray(result[prop])) {

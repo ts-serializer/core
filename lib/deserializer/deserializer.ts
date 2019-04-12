@@ -1,3 +1,4 @@
+import {Converter} from '../converter/converter';
 import {ConverterStrategy} from '../converter/converter-strategy';
 import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
@@ -5,23 +6,16 @@ import {isArray} from '../util';
 
 export class Deserializer {
 
-    public constructor(private converterStrategies: ConverterStrategy[]) {
+    public constructor(private converterStrategies: ConverterStrategy[] = null) {
         if (!this.converterStrategies) {
             this.converterStrategies = [];
         }
         this.converterStrategies.push(new InstantiateConverterStrategy());
 
         if (this.converterStrategies.length > 1) {
-            this.converterStrategies.sort((csA: ConverterStrategy , csB: ConverterStrategy) => {
-                if (csA.getPriority() < csB.getPriority()) {
-                    return -1;
-                }
-                if (csA.getPriority() > csB.getPriority()) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            this.converterStrategies.sort(
+                (csA: ConverterStrategy , csB: ConverterStrategy) => csA.getPriority() - csB.getPriority()
+            );
         }
     }
 
@@ -62,11 +56,9 @@ export class Deserializer {
             if (isArray(result[prop])) {
                 result[prop] = result[prop].map((value: any) => {
                     if (propertyContext.customConverter) {
-                        const converter: ConverterStrategy = this.converterStrategies.find(
-                            (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
-                        );
+                        const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
 
-                        return converter ? converter
+                        return strategy ? strategy
                             .getConverter(propertyContext.customConverter)
                             .fromJson(value) : null;
                     } else if (propertyContext.type) {
@@ -75,20 +67,22 @@ export class Deserializer {
                         return value;
                     }
                 });
-            } else {
-                if (propertyContext.customConverter) {
-                    const converter: ConverterStrategy = this.converterStrategies.find(
-                        (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
-                    );
-                    result[prop] = converter ? converter
-                        .getConverter(propertyContext.customConverter)
-                        .fromJson(result[prop]) : null;
-                } else if (propertyContext.type) {
-                    result[prop] = this.deserialize(propertyContext.type, result[prop]);
-                }
+            } else if (propertyContext.customConverter) {
+                const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
+                result[prop] = strategy ? strategy
+                    .getConverter(propertyContext.customConverter)
+                    .fromJson(result[prop]) : null;
+            } else if (propertyContext.type) {
+                result[prop] = this.deserialize(propertyContext.type, result[prop]);
             }
         }
 
         return result;
+    }
+
+    public getConverterStrategy(converterType: {new(): Converter<any, any>}): ConverterStrategy {
+        return this.converterStrategies.find(
+            (cs: ConverterStrategy) => cs.canUseFor(converterType)
+        );
     }
 }

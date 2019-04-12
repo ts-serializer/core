@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {Converter} from '../converter/converter';
 import {ConverterStrategy} from '../converter/converter-strategy';
 import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
@@ -7,9 +8,8 @@ import {SerializerConfiguration} from './serializer-configuration';
 
 export class Serializer {
 
-    public constructor(
-      private serializerConfiguration: SerializerConfiguration,
-      private converterStrategies: ConverterStrategy[]) {
+    public constructor(private serializerConfiguration: SerializerConfiguration,
+                       private converterStrategies: ConverterStrategy[] = null) {
         if (!this.serializerConfiguration) {
             this.serializerConfiguration = new SerializerConfiguration();
         }
@@ -20,16 +20,9 @@ export class Serializer {
         this.converterStrategies.push(new InstantiateConverterStrategy());
 
         if (this.converterStrategies.length > 1) {
-            this.converterStrategies.sort((csA: ConverterStrategy , csB: ConverterStrategy) => {
-                if (csA.getPriority() < csB.getPriority()) {
-                    return -1;
-                }
-                if (csA.getPriority() > csB.getPriority()) {
-                    return 1;
-                }
-
-                return 0;
-            });
+            this.converterStrategies.sort(
+                (csA: ConverterStrategy , csB: ConverterStrategy) => csA.getPriority() - csB.getPriority()
+            );
         }
     }
 
@@ -68,24 +61,20 @@ export class Serializer {
             if (isArray(propertyValue)) {
                 propertyValue = propertyValue.map((value: any) => {
                     if (propertyContext.customConverter) {
-                        const converter: ConverterStrategy = this.converterStrategies.find(
-                            (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
-                        );
+                        const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
 
-                        return converter ? converter.getConverter(propertyContext.customConverter).toJson(value) : null;
+                        return strategy ? strategy.getConverter(propertyContext.customConverter).toJson(value) : null;
                     } else {
                         return !isPrimitive(value) ? this.serialize(value) : value;
                     }
                 });
-            } else if (!isPrimitive(propertyValue)) {
+            } else {
                 if (propertyContext.customConverter) {
-                    const converter: ConverterStrategy = this.converterStrategies.find(
-                        (cs: ConverterStrategy) => cs.canUseFor(propertyContext.customConverter)
-                    );
-                    propertyValue = converter ? converter
+                    const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
+                    propertyValue = strategy ? strategy
                         .getConverter(propertyContext.customConverter)
                         .toJson(propertyValue) : null;
-                } else {
+                } else if (!isPrimitive(propertyValue)) {
                   propertyValue = this.serialize(propertyValue);
                 }
             }
@@ -94,5 +83,11 @@ export class Serializer {
         }
 
         return result;
+    }
+
+    public getConverterStrategy(converterType: {new(): Converter<any, any>}): ConverterStrategy {
+        return this.converterStrategies.find(
+            (cs: ConverterStrategy) => cs.canUseFor(converterType)
+        );
     }
 }

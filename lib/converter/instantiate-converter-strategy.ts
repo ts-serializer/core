@@ -7,11 +7,11 @@ export class InstantiateConverterStrategy implements ConverterStrategy {
     return 1;
   }
 
-  public canUseFor(type: {new(): Converter<any, any>}): boolean {
+  public canUseFor(type: {new(...args: any[]): Converter<any, any>}): boolean {
     return true;
   }
 
-  public getConverter(type: {new(): Converter<any, any>}): Converter<any, any> {
+  public getConverter(type: {new(...args: any[]): Converter<any, any>}): Converter<any, any> {
     return new type();
   }
 }

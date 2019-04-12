@@ -33,9 +33,9 @@ export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R
 export class JsonPropertyContext<T, R> {
     public name?: string;
 
-    public type?: {new(): T};
+    public type?: {new(...args: any[]): T};
 
-    public customConverter?: {new(): Converter<T, R>};
+    public customConverter?: {new(...args: any[]): Converter<T, R>};
 
     public excludeToJson?: boolean;
 

@@ -21,7 +21,7 @@ export class Serializer {
 
         if (this.converterStrategies.length > 1) {
             this.converterStrategies.sort(
-                (csA: ConverterStrategy , csB: ConverterStrategy) => csA.getPriority() - csB.getPriority()
+                (csA: ConverterStrategy , csB: ConverterStrategy) => csB.getPriority() - csA.getPriority()
             );
         }
     }

@@ -14,6 +14,7 @@ hero.nickName = 'Tom';
 hero.animal = new Animal();
 hero.animal.id = 2;
 hero.animal.name = 'Patrick';
+hero.animal.pv = 51;
 hero.tags = ['tag1', 'tag2'];
 hero.birthDay = new Date('December 17, 1995 03:24:00');
 hero.fightDates = [new Date('December 18, 2000 03:24:00'), new Date('December 19, 2005 03:24:00')];
@@ -35,9 +36,9 @@ const serializerConfiguration = new SerializerConfiguration();
 const converterStrategy: ConverterStrategy = new InstantiateConverterStrategy();
 
 const serializer: Serializer = new Serializer(serializerConfiguration, [converterStrategy]);
-console.log(serializer.serialize([hero]));
+console.log(serializer.serialize(hero));
 
 console.log();
 
 serializerConfiguration.serializeNull = true;
-console.log(serializer.serialize([hero]));
+console.log(serializer.serialize(hero));

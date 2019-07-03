@@ -123,6 +123,7 @@ hero.nickName = 'Tom';
 hero.animal = new Animal();
 hero.animal.id = 2;
 hero.animal.name = 'Patrick';
+hero.animal.pv = 51;
 hero.tags = ['tag1', 'tag2'];
 
 const weapon1 = new Weapon();
@@ -142,5 +143,21 @@ console.log(serializer.serialize(hero));
 The result is :
 
 ```javascript
-
+{
+    identifier: 1,
+    firstName: 'Thomas',
+    lastName: 'Nisole',
+    animal: { id: 2, name: 'Patrick' },
+    tags: [ 'tag1', 'tag2' ],
+    weapons: [
+        {
+            id: 3,
+            name: 'Sword'
+        },
+        {
+            id: 4,
+            name: 'shield'
+        }
+    ]
+}
 ```

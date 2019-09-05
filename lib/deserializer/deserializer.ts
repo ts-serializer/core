@@ -9,6 +9,10 @@ export class Deserializer {
 
     public constructor(private deserializerConfiguration: DeserializerConfiguration,
                        private converterStrategies: ConverterStrategy[] = null) {
+        if (!this.deserializerConfiguration) {
+            this.deserializerConfiguration = new DeserializerConfiguration();
+        }
+
         if (!this.converterStrategies) {
             this.converterStrategies = [];
         }

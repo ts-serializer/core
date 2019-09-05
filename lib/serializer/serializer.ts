@@ -49,11 +49,15 @@ export class Serializer {
             }
             propertyValue = object[prop];
 
-            if (!this.serializerConfiguration.serializeNull && propertyValue == null) {
+            if (!this.serializerConfiguration.serializeUndefined && propertyValue === undefined) {
                 continue;
             }
 
-            if (this.serializerConfiguration.serializeNull && propertyValue == null) {
+            if (!this.serializerConfiguration.serializeNull && propertyValue === null) {
+                continue;
+            }
+
+            if (this.serializerConfiguration.serializeNull && propertyValue === null) {
                 result[propertyContext.name] = null;
                 continue;
             }

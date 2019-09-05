@@ -2,6 +2,7 @@ import {Deserializer} from '../lib/deserializer/deserializer';
 import {Hero} from './hero';
 import {InstantiateConverterStrategy} from '../lib/converter/instantiate-converter-strategy';
 import {ConverterStrategy} from '../lib/converter/converter-strategy';
+import {DeserializerConfiguration} from '../lib/deserializer/deserializer-configuration';
 
 const data = {
   identifier: 1,
@@ -16,6 +17,7 @@ const data = {
   myPrivateProperty: 'hello'
 };
 
+const deserializerConfiguration = new DeserializerConfiguration();
 const converterStrategy: ConverterStrategy = new InstantiateConverterStrategy();
-const deserializer: Deserializer = new Deserializer([converterStrategy]);
+const deserializer: Deserializer = new Deserializer(deserializerConfiguration, [converterStrategy]);
 console.log(deserializer.deserialize(Hero, data));

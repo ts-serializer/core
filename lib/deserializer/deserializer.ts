@@ -3,10 +3,12 @@ import {ConverterStrategy} from '../converter/converter-strategy';
 import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
 import {isArray} from '../util';
+import {DeserializerConfiguration} from './deserializer-configuration';
 
 export class Deserializer {
 
-    public constructor(private converterStrategies: ConverterStrategy[] = null) {
+    public constructor(private deserializerConfiguration: DeserializerConfiguration,
+                       private converterStrategies: ConverterStrategy[] = null) {
         if (!this.converterStrategies) {
             this.converterStrategies = [];
         }
@@ -48,6 +50,19 @@ export class Deserializer {
             }
 
             if (data[propertyContext.name] == null) {
+                continue;
+            }
+
+            if (!this.deserializerConfiguration.deserializeUndefined && data[propertyContext.name] === undefined) {
+                continue;
+            }
+
+            if (!this.deserializerConfiguration.deserializeNull && data[propertyContext.name] === null) {
+                continue;
+            }
+
+            if (this.deserializerConfiguration.deserializeNull && data[propertyContext.name] === null) {
+                result[prop] = null;
                 continue;
             }
 

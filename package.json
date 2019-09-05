@@ -1,6 +1,6 @@
 {
   "name": "ts-serializer-core",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "An serializer library for Typescript And Javascript",
   "main": "index.js",
   "scripts": {

@@ -53,10 +53,6 @@ export class Deserializer {
                 throw new Error('JsonProperty annotation doesn\'t support function');
             }
 
-            if (data[propertyContext.name] == null) {
-                continue;
-            }
-
             if (!this.deserializerConfiguration.deserializeUndefined && data[propertyContext.name] === undefined) {
                 continue;
             }

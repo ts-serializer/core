@@ -42,5 +42,8 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.1.12"
+  },
+  "engines": {
+    "yarn": "YARN NO LONGER USED - use npm instead."
   }
 }

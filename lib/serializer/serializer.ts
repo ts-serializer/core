@@ -89,7 +89,7 @@ export class Serializer {
         return result;
     }
 
-    public getConverterStrategy(converterType: {new(): Converter<any, any>}): ConverterStrategy {
+    public getConverterStrategy(converterType: new() => Converter<any, any>): ConverterStrategy {
         return this.converterStrategies.find(
             (cs: ConverterStrategy) => cs.canUseFor(converterType)
         );

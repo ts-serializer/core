@@ -25,7 +25,7 @@ export class Deserializer {
         }
     }
 
-    public deserialize(type: {new(): any}, data: any|any[]): any {
+    public deserialize(type: new() => any, data: any|any[]): any {
         if (type == null) {
             throw new Error('For deserialization of complex type, type attribute cannot be null in JsonProperty');
         }

@@ -2,8 +2,6 @@ import {Hero} from './hero';
 import {Serializer} from '../lib/serializer/serializer';
 import {Animal} from './animal';
 import {Weapon} from './weapon';
-import {ConverterStrategy} from '../lib/converter/converter-strategy';
-import {InstantiateConverterStrategy} from '../lib/converter/instantiate-converter-strategy';
 import {SerializerConfiguration} from '../lib/serializer/serializer-configuration';
 
 const hero: Hero = new Hero();
@@ -33,9 +31,8 @@ hero.weapons = [weapon1, weapon2];
 
 
 const serializerConfiguration = new SerializerConfiguration();
-const converterStrategy: ConverterStrategy = new InstantiateConverterStrategy();
 
-const serializer: Serializer = new Serializer(serializerConfiguration, [converterStrategy]);
+const serializer: Serializer = new Serializer(serializerConfiguration);
 console.log(serializer.serialize(hero));
 
 console.log();

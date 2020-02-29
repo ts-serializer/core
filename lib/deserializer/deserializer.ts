@@ -1,28 +1,12 @@
+import {get} from 'lodash';
 import {Converter} from '../converter/converter';
-import {ConverterStrategy} from '../converter/converter-strategy';
-import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
 import {isArray} from '../util';
 import {DeserializerConfiguration} from './deserializer-configuration';
 
 export class Deserializer {
 
-  public constructor(private deserializerConfiguration: DeserializerConfiguration,
-                     private converterStrategies: ConverterStrategy[] = null) {
-    if (!this.deserializerConfiguration) {
-      this.deserializerConfiguration = new DeserializerConfiguration();
-    }
-
-    if (!this.converterStrategies) {
-      this.converterStrategies = [];
-    }
-    this.converterStrategies.push(new InstantiateConverterStrategy());
-
-    if (this.converterStrategies.length > 1) {
-      this.converterStrategies.sort(
-        (csA: ConverterStrategy, csB: ConverterStrategy) => csB.getPriority() - csA.getPriority()
-      );
-    }
+  public constructor(private deserializerConfiguration: DeserializerConfiguration = new DeserializerConfiguration()) {
   }
 
   public deserialize(type: new() => any, data: any | any[]): any {
@@ -66,16 +50,14 @@ export class Deserializer {
         continue;
       }
 
-      result[prop] = data[propertyContext.name];
+      result[prop] = get(data, propertyContext.name);
 
       if (isArray(result[prop])) {
         result[prop] = result[prop].map((value: any) => {
           if (propertyContext.customConverter) {
-            const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
+            const converter: Converter<any, any> = new propertyContext.customConverter();
 
-            return strategy ? strategy
-              .getConverter(propertyContext.customConverter)
-              .fromJson(value) : null;
+            return converter.fromJson(value);
           } else if (propertyContext.type) {
             return this.deserialize(propertyContext.type, value);
           } else {
@@ -83,21 +65,13 @@ export class Deserializer {
           }
         });
       } else if (propertyContext.customConverter) {
-        const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
-        result[prop] = strategy ? strategy
-          .getConverter(propertyContext.customConverter)
-          .fromJson(result[prop]) : null;
+        const converter: Converter<any, any> = new propertyContext.customConverter();
+        result[prop] = converter.fromJson(result[prop]);
       } else if (propertyContext.type) {
         result[prop] = this.deserialize(propertyContext.type, result[prop]);
       }
     }
 
     return result;
-  }
-
-  public getConverterStrategy(converterType: new() => Converter<any, any>): ConverterStrategy {
-    return this.converterStrategies.find(
-      (cs: ConverterStrategy) => cs.canUseFor(converterType)
-    );
   }
 }

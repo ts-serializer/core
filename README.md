@@ -49,7 +49,6 @@ The serializer accept two arguments :
 Argument | Type | Required | Description
 ---------|------|----------|------------
 serializerConfiguration | SerializerConfiguration | False | The serializer configuration is use to configure the serializer
-converterStrategies | ConverterStrategy[] | False | This array is used by serializer to know how to use your custom converter
 
 
 ### Deserializer
@@ -67,7 +66,7 @@ The deserializer accept one argument :
 
 Argument | Type | Required | Description
 ---------|------|----------|------------
-converterStrategies | ConverterStrategy[] | False | This array is used by deserializer to know how to use your custom converter
+deserializerConfiguration | DeserializerConfiguration | False | The deserializer configuration is use to configure the deserializer
 
 ### Serialization/Deserialization configuration
 
@@ -145,7 +144,7 @@ weapon2.name = 'shield';
 
 hero.weapons = [weapon1, weapon2];
 
-const serializer: Serializer = new Serializer(serializerConfiguration, [converterStrategy]);
+const serializer: Serializer = new Serializer(serializerConfiguration);
 console.log(serializer.serialize(hero));
 ```
 
@@ -175,6 +174,9 @@ The result is :
 
 ### JsonProperty
 
+JsonProperty is a decorator for class attribute. It is use to configure the serialization/deserialization process.
+You can use all of this next attributes or just a string.
+
 | Attribute Name | Type | Mandatory | Description | 
 | -------------- | ---- | --------- | ----------- |
 | name | string  | Yes | The name or path field in the json data object |
@@ -182,3 +184,11 @@ The result is :
 | customConverter | Converter | A custom converter class to customize the serialize/deserialize process |
 | excludeToJson | boolean | No | A boolean to exclude the field to the serialize json object |
 | excludeFromJson | boolean | No | A boolean to not take care of the field from json object in the deserialization process |
+
+### Converter
+
+Converter is an interface use to make custom converter.
+
+### DateConverter
+
+DateConverter is a class used to convert DateTime object to ISO date string.

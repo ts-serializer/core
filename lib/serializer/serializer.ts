@@ -1,29 +1,13 @@
+import {set} from 'lodash';
 import 'reflect-metadata';
 import {Converter} from '../converter/converter';
-import {ConverterStrategy} from '../converter/converter-strategy';
-import {InstantiateConverterStrategy} from '../converter/instantiate-converter-strategy';
 import {JsonPropertyContext} from '../decorator/json-property';
 import {isArray, isPrimitive} from '../util';
 import {SerializerConfiguration} from './serializer-configuration';
 
 export class Serializer {
 
-  public constructor(private serializerConfiguration: SerializerConfiguration,
-                     private converterStrategies: ConverterStrategy[] = null) {
-    if (!this.serializerConfiguration) {
-      this.serializerConfiguration = new SerializerConfiguration();
-    }
-
-    if (!this.converterStrategies) {
-      this.converterStrategies = [];
-    }
-    this.converterStrategies.push(new InstantiateConverterStrategy());
-
-    if (this.converterStrategies.length > 1) {
-      this.converterStrategies.sort(
-        (csA: ConverterStrategy, csB: ConverterStrategy) => csB.getPriority() - csA.getPriority()
-      );
-    }
+  public constructor(private serializerConfiguration: SerializerConfiguration = new SerializerConfiguration()) {
   }
 
   public serialize(object: any | any[]): any {
@@ -65,33 +49,25 @@ export class Serializer {
       if (isArray(propertyValue)) {
         propertyValue = propertyValue.map((value: any) => {
           if (propertyContext.customConverter) {
-            const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
+            const converter: Converter<any, any> = new propertyContext.customConverter();
 
-            return strategy ? strategy.getConverter(propertyContext.customConverter).toJson(value) : null;
+            return converter.toJson(value);
           } else {
             return !isPrimitive(value) ? this.serialize(value) : value;
           }
         });
       } else {
         if (propertyContext.customConverter) {
-          const strategy: ConverterStrategy = this.getConverterStrategy(propertyContext.customConverter);
-          propertyValue = strategy ? strategy
-            .getConverter(propertyContext.customConverter)
-            .toJson(propertyValue) : null;
+          const converter: Converter<any, any> = new propertyContext.customConverter();
+          propertyValue = converter.toJson(propertyValue);
         } else if (!isPrimitive(propertyValue)) {
           propertyValue = this.serialize(propertyValue);
         }
       }
 
-      result[propertyContext.name] = propertyValue;
+      set(result, propertyContext.name, propertyValue);
     }
 
     return result;
-  }
-
-  public getConverterStrategy(converterType: new() => Converter<any, any>): ConverterStrategy {
-    return this.converterStrategies.find(
-      (cs: ConverterStrategy) => cs.canUseFor(converterType)
-    );
   }
 }

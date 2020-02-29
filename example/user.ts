@@ -11,7 +11,7 @@ export class User {
   @JsonProperty('firstName')
   public firstName: string;
 
-  @JsonProperty({excludeToJson: true})
+  @JsonProperty({name: 'nickname', excludeToJson: true})
   public nickName: string;
 
   public getFullName(): string {

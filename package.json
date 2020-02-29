@@ -6,7 +6,6 @@
   "scripts": {
     "start:example:serializer": "npm run clean && tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-serializer.js\"",
     "start:example:deserializer": "npm run clean && tsc-watch --project . --outDir ./dist --onSuccess \"node ./dist/example/example-deserializer.js\"",
-    "test": "mocha -r ts-node/register test/**/*.ts",
     "clean": "rm -R -f dist",
     "lint": "tslint -p tsconfig.json",
     "build": "npm run clean && npm run lint && tsc",
@@ -31,10 +30,6 @@
   },
   "homepage": "https://github.com/ts-serializer/core#readme",
   "devDependencies": {
-    "@types/chai": "^4.1.6",
-    "@types/mocha": "^5.2.5",
-    "chai": "^4.1.2",
-    "mocha": "^5.2.0",
     "ts-node": "^7.0.1",
     "tsc-watch": "^1.0.26",
     "tslint": "^5.11.0",

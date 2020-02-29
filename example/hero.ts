@@ -25,6 +25,13 @@ export class Hero extends User {
 
   private _myDatePrivateProperty: Date;
 
+  public get monGetter(): string {
+    return 'monGetter';
+  }
+
+  public set monSetter(value: string) {
+  }
+
   public getWeapons(): string {
     return 'my weapons';
   }
@@ -33,15 +40,8 @@ export class Hero extends User {
     return this.id + ' : ' + this.firstName + ' - ' + this.lastName + ' / Animal : ' + this.animal.id + ' - ' + this.animal.name;
   }
 
-  public get monGetter(): string {
-    return 'monGetter';
-  }
-
-  public set monSetter(value: string) {
-  }
-
   public getMyPrivateProperty(): string {
-      return this._myPrivateProperty;
+    return this._myPrivateProperty;
   }
 
   public setMyPrivateProperty(value: string): void {

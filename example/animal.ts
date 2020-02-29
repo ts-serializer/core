@@ -2,11 +2,11 @@ import {JsonProperty} from '../lib/decorator/json-property';
 
 export class Animal {
 
-    @JsonProperty('id')
-    public id: number;
+  @JsonProperty('id')
+  public id: number;
 
-    @JsonProperty('name')
-    public name: string;
+  @JsonProperty('name')
+  public name: string;
 
-    public pv: number;
+  public pv: number;
 }

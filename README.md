@@ -1,6 +1,12 @@
 # TS-Serializer Core
 
 [![Build Status](https://travis-ci.org/ts-serializer/core.svg?branch=master)](https://travis-ci.org/ts-serializer/core)
+[![npm version](https://badge.fury.io/js/ts-serializer-core.svg)](https://badge.fury.io/js/ts-serializer-core)
+![NPM](https://img.shields.io/npm/l/ts-serializer-core)
+![GitHub repo size](https://img.shields.io/github/repo-size/ts-serializer/core)
+![GitHub last commit](https://img.shields.io/github/last-commit/ts-serializer/core)
+![GitHub issues](https://img.shields.io/github/issues/ts-serializer/core)
+![GitHub top language](https://img.shields.io/github/languages/top/ts-serializer/core)
 
 ## Summary
 

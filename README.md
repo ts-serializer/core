@@ -153,19 +153,19 @@ The result is :
 
 ```json
 {
-    identifier: 1,
-    firstName: 'Thomas',
-    lastName: 'Nisole',
-    animal: { id: 2, name: 'Patrick' },
-    tags: [ 'tag1', 'tag2' ],
-    weapons: [
+    "identifier": 1,
+    "firstName": "Thomas",
+    "lastName": "Nisole",
+    "animal": { "id": 2, "name": "Patrick" },
+    "tags": [ "tag1", "tag2" ],
+    "weapons": [
         {
-            id: 3,
-            name: 'Sword'
+            "id": 3,
+            "name": "Sword"
         },
         {
-            id: 4,
-            name: 'shield'
+            "id": 4,
+            "name": "shield"
         }
     ]
 }

@@ -32,7 +32,7 @@ export function JsonProperty<T, R>(jsonPropertyContext: JsonPropertyContext<T, R
 
 export class JsonPropertyContext<T, R> {
 
-  public name?: string;
+  public name: string;
 
   public type?: new(...args: any[]) => T;
 

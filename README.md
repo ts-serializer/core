@@ -2,24 +2,27 @@
 
 [![Build Status](https://travis-ci.org/ts-serializer/core.svg?branch=master)](https://travis-ci.org/ts-serializer/core)
 
+## Summary
+
+* [Introduction](#introduction)
+* [Installation](#installation)
+* [How to use](#how-to-use)
+    * [Serializer](#serializer)
+    * [Deserializer](#deserializer)
+    * [Serialization/Deserialization configuration](#serializationdeserialization-configuration)
+* [API](#api)
+    * [JsonProperty](#jsonproperty)
+
 ## Introduction
 
 TS-Serializer Core is a library to manage serialization and deserialization in a Typescript program. It use decorator to configure serialization and deserialization.
 
 ## Installation
 
-### With NPM
 For installing core in Typescript Project with NPM, just run this command :
 
-```javascript
-npm install --save ts-serializer-core
-```
-
-### With Yarn
-For installing core in Typescript Project with Yarn, just run this command :
-
-```javascript
-yarn add --save ts-serializer-core
+```shell script
+npm i ts-serializer-core
 ```
 
 ## How to use
@@ -28,7 +31,7 @@ yarn add --save ts-serializer-core
 
 To use the serializer, you just have to instantiate an object of type ```Serializer```.
 
-```javascript
+```typescript
 import {Serializer} from 'ts-serializer-core';
 
 const serializer: Serializer = new Serialize();
@@ -47,7 +50,7 @@ converterStrategies | ConverterStrategy[] | False | This array is used by serial
 
 To use the deserializer, you just have to instantiate an object of type ```Deserializer```.
 
-```javascript
+```typescript
 import {Deserializer} from 'ts-deserializer-core';
 
 const deserializer: Deserializer = new Deserialize();
@@ -64,7 +67,7 @@ converterStrategies | ConverterStrategy[] | False | This array is used by deseri
 
 In this example, we configure models with simple and complex object/array type :
 
-```javascript
+```typescript
 import {JsonProperty} from 'ts-deserializer-core';
 
 export class User {
@@ -114,7 +117,7 @@ export class Weapon {
 
 To use this configuration, we can run this code example :
 
-```javascript
+```typescript
 const hero: Hero = new Hero();
 hero.id = 1;
 hero.firstName = 'Thomas';
@@ -142,7 +145,7 @@ console.log(serializer.serialize(hero));
 
 The result is :
 
-```javascript
+```json
 {
     identifier: 1,
     firstName: 'Thomas',
@@ -161,3 +164,15 @@ The result is :
     ]
 }
 ```
+
+## API
+
+### JsonProperty
+
+| Attribute Name | Type | Mandatory | Description | 
+| -------------- | ---- | --------- | ----------- |
+| name | string  | Yes | The name or path field in the json data object |
+| type | Type | No | The type for serialize/deserialize process to apply to the field |
+| customConverter | Converter | A custom converter class to customize the serialize/deserialize process |
+| excludeToJson | boolean | No | A boolean to exclude the field to the serialize json object |
+| excludeFromJson | boolean | No | A boolean to not take care of the field from json object in the deserialization process |

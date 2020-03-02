@@ -1,7 +1,5 @@
 import {Deserializer} from '../lib/deserializer/deserializer';
 import {Hero} from './hero';
-import {InstantiateConverterStrategy} from '../lib/converter/instantiate-converter-strategy';
-import {ConverterStrategy} from '../lib/converter/converter-strategy';
 import {DeserializerConfiguration} from '../lib/deserializer/deserializer-configuration';
 
 const data = {
@@ -18,6 +16,5 @@ const data = {
 };
 
 const deserializerConfiguration = new DeserializerConfiguration();
-const converterStrategy: ConverterStrategy = new InstantiateConverterStrategy();
-const deserializer: Deserializer = new Deserializer(deserializerConfiguration, [converterStrategy]);
+const deserializer: Deserializer = new Deserializer(deserializerConfiguration);
 console.log(deserializer.deserialize(Hero, data));

@@ -1,6 +1,6 @@
 {
   "name": "ts-serializer-core",
-  "version": "1.1.0-rc.1",
+  "version": "1.1.0-rc.2",
   "description": "An serializer library for Typescript And Javascript",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "clean": "rm -R -f dist",
     "lint": "tslint -p tsconfig.json",
     "build": "npm run clean && npm run lint && tsc",
-    "package": "npm run build && cp package.json dist",
+    "package": "npm run build && cp package.json dist && cp README.md dist",
     "dist": "npm run package && cd dist && npm publish"
   },
   "repository": {
